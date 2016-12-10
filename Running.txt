@@ -11,7 +11,9 @@ run these command:-
 copy the user tweets into hdfs using this command:-	
 hdfs dfs -copyFromLocal user_tweet.txt /user/mchopra/project_data_models
 
-1)create the cassandra tables (mchopra is the user )
+Before running the final Recommender code the_recommender.py ,all the preprocessed data needs to be present in the input directory(project_data_models) ,preprocessed data can be obtain through steps 1 to 6
+
+1)create the cassandra tables (mchopra is the user)
 python create_tables_cassendra.py  mchopra
 
 2)load data into cassandra tables (/user/mchopra/project is the hdfs directory having yelp data)
