@@ -1,0 +1,34 @@
+
+install levenshtein package for python
+install nltk library
+download the nltk_data change permission to 0711
+
+run these command:-
+	chmod 0711 ~/.local ~/.local/lib ~/.local/lib/python2.7 ~/.local/lib/python2.7/site-packages
+	export PYTHONPATH=/home/mchopra/.local/lib/python2.7/site-packages/
+
+copy the user tweets into hdfs using this command:-	
+hdfs dfs -copyFromLocal user_tweet.txt /user/mchopra/project_data_models
+
+1)create the cassandra tables (mchopra is the user )
+python create_tables_cassendra.py  mchopra
+
+2)load data into cassandra tables (/user/mchopra/project is the hdfs directory having yelp data)
+spark-submit --master=yarn-client --packages TargetHolding/pyspark-cassandra:0.3.5 load_table_cassendra.py /user/mchopra/project mchopra
+
+3)Preprocess data for model and save into labelled RDD of train and test data 
+spark-submit --master=yarn-client --packages TargetHolding/pyspark-cassandra:0.3.5 prepare_data_train_test.py mchopra project_data_models
+ 
+4)Train the model and save the weights(here project_data_models is input and output directory)
+spark-submit --master "local[*]" train_and_save_weights.py project_data_models project_data_models
+
+5)Save User and Restaurant information in Parquet Format in project_data_models directory
+spark-submit --master=yarn-client --packages TargetHolding/pyspark-cassandra:0.3.5 save_restaurant_user.py mchopra project_data_models
+
+6)Save Checking info in Parquet Format in project_data_models directory
+spark-submit --master=yarn-client --packages TargetHolding/pyspark-cassandra:0.3.5 save_checkin_info.py mchopra project_data_models
+
+7)The final recommender ,all previous preprocessed data and model should be present inside project_data_models ,waterloo is given city and 0 means sunday and final is the final_output directory where result will be saved    
+spark-submit --master=yarn-client --packages TargetHolding/pyspark-cassandra:0.3.5 the_recommender.py project_data_models  waterloo 0 final
+ 
+ 
