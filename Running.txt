@@ -17,7 +17,7 @@ python create_tables_cassendra.py  mchopra
 2)load data into cassandra tables (/user/mchopra/project is the hdfs directory having yelp data)
 spark-submit --master=yarn-client --packages TargetHolding/pyspark-cassandra:0.3.5 load_table_cassendra.py /user/mchopra/project mchopra
 
-3)Preprocess data for model and save into labelled RDD of train and test data 
+3)Preprocess data for model and save into labelled RDD of train and test data (before running in code change path to your home directory where nltk_data is stored) 
 spark-submit --master=yarn-client --packages TargetHolding/pyspark-cassandra:0.3.5 prepare_data_train_test.py mchopra project_data_models
  
 4)Train the model and save the weights(here project_data_models is input and output directory)
